@@ -1,46 +1,25 @@
-# app/main.py
-import os
-import sys
+"""Entry point:  streamlit run main.py"""
 import streamlit as st
+from utils import inject_css, brand_header, pipeline_strip
 
-PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-if PROJECT_ROOT not in sys.path:
-    sys.path.insert(0, PROJECT_ROOT)
+st.set_page_config(page_title="IDP + RAG", page_icon="📄", layout="wide")
+inject_css()
 
-from modules.rag import RAGAssistant
-from app.tabs import render_tab1, render_tab2, render_tab3
+# ---- shared state (lives across tabs) ----
+st.session_state.setdefault("n_docs", 47)
+st.session_state.setdefault("n_fields", 516)
 
-# Streamlit Configuration
-st.set_page_config(
-    page_title="Logistics Benchmarking & RAG Platform",
-    page_icon="📦",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+pages = [
+    st.Page("tabs/tab1.py", title="RAG Assistant", icon="💬", url_path="rag", default=True),
+    st.Page("tabs/tab2.py", title="Benchmark Dashboard", icon="📊", url_path="bench"),
+    st.Page("tabs/tab3.py", title="Try It Yourself", icon="🧪", url_path="try"),
+]
+pg = st.navigation(pages, position="top")
 
-# Initialize Session State
-if "rag_assistant" not in st.session_state:
-    st.session_state.rag_assistant = RAGAssistant()
+brand_header()
+pipeline_strip(pg.url_path)
+pg.run()
 
-if "chat_history" not in st.session_state:
-    st.session_state.chat_history = []
-
-# Header
-st.title("📦 Logistics Document Benchmarking & RAG System")
-st.markdown("Production-ready Document AI platform for benchmark analysis, multi-paradigm extraction, and hybrid RAG search.")
-
-# 3 Focused Functional Pages
-tab1, tab2, tab3 = st.tabs([
-    "💬 1. RAG Assistant",
-    "📊 2. Benchmark Dashboard",
-    "⚡ 3. Try It Yourself"
-])
-
-with tab1:
-    render_tab1()
-
-with tab2:
-    render_tab2(PROJECT_ROOT)
-
-with tab3:
-    render_tab3(PROJECT_ROOT)
+st.markdown('<div class="soft" style="text-align:center;font-size:12px;padding:24px 0">'
+            'FYP2 · WIA3003 · Dr. Liew Wei Shiung · INNONICS Sdn. Bhd. · Faculty of Computer Science, University of Malaya</div>',
+            unsafe_allow_html=True)
