@@ -1,0 +1,32 @@
+# secrets
+.env
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# notebooks
+.ipynb_checkpoints/
+
+# Raw Datasets & Heavy Binary Files
+data/raw/
+data/canonical_gt/
+data/benchmark/
+data/logistics.db
+*.zip
+*.tar.gz
+*.pdf
+*.png
+*.jpg
+*.jpeg
+
+
+# os / editor
+.DS_Store
+.vscode/
+.idea/
